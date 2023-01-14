@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+  <!-- Required meta tags -->
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>News Subscriber</title>
+
+  <!-- Bootstrap CSS, JS and JQuery -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.js"></script>
+
+  <!-- Link to  CSS file -->
+  <link th:href="@{/css/styles.css}" rel="stylesheet">
+</head>
+<body>
+
+<div class="navbar-container">
+  <div class="wrapper">
+    <nav>
+      <div class="logo">
+        <img src="images/logo.svg">
+      </div>
+      <ul class="navbar-items">
+        <li>
+          <a href="https://github.com/kacperkadziolka">About</a>
+        </li>
+        <li>
+          <a href="#" data-bs-toggle="modal" data-bs-target="#addSubscribeModal">Subscribe</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</div>
+
+<div class="header-container">
+  <div class="wrapper">
+    <header>
+      <div class="hero-content">
+        <h1>
+          Subscribe World Wide News With One Click
+        </h1>
+        <p>
+          Free email notifications with breaking news on topic of your choice
+        </p>
+        <a class="subscribe-button" href="#" data-bs-toggle="modal" data-bs-target="#addSubscribeModal">
+          SUBSCRIBE
+        </a>
+        <a class="subscription-button" href="#" data-bs-toggle="modal" data-bs-target="#yourSubscriptionModal">
+          YOUR SUBSCRIPTION
+        </a>
+      </div>
+      <div class="hero-image">
+        <img src="images/hero-image.png">
+      </div>
+    </header>
+    <div class="powered-by">
+      <p>POWERED BY</p>
+    </div>
+    <div class="powered-section">
+      <img src="images/spring-boot.svg">
+      <img src="images/news-api.svg">
+      <img src="images/gmail.svg">
+    </div>
+  </div>
+</div>
+
+<!-- Subscribe Modal -->
+<div class="modal fade" id="addSubscribeModal" tabindex="-1" aria-labelledby="addSubscribeModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="addSubscribeModalLabel">SUBSCRIBE TRENDS</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form th:action="@{/sendEmail}" method="post" id="subscribe-form">
+          <div class="mb-3">
+            <label for="emailAddressSubmitForm" class="form-label">E-mail address:</label>
+            <input type="email" class="form-control" name="emailAddress" id="emailAddressSubmitForm" placeholder="Enter your email-address" required>
+          </div>
+          <div class="mb-3">
+            <label for="newsTopicSubmitForm" class="form-label">News topic:</label>
+            <input type="text" class="form-control" name="newsTopic" id="newsTopicSubmitForm" placeholder="Enter your news topic" required>
+          </div>
+          <div class="mb-3 form-select-inline">
+            <label for="messageTimeIntervalSubmitForm" class="form-label">Time interval:</label>
+            <select name="timeUnit" id="messageTimeIntervalSubmitForm-select" class="form-control" required>
+              <option disabled selected value> -- select an option -- </option>
+              <option value="SECONDS">Seconds</option>
+              <option value="MINUTES">Minutes</option>
+              <option value="HOURS">Hours</option>
+              <option value="DAYS">Days</option>
+            </select>
+            <input type="text" class="form-control form-control-last" name="period" id="messageTimeIntervalSubmitForm" placeholder="Enter your time interval" required>
+            <div id="emailHelp" class="form-text">The time between each email is sent</div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" id="formSubmit" class="btn btn-primary">SUBSCRIBE</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Your Subscriptions Modal -->
+<div class="modal fade" id="yourSubscriptionModal" tabindex="-1" aria-labelledby="yourSubscriptionModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="yourSubscriptionModalLabel">YOUR SUBSCRIPTIONS</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+
+        <table class="table">
+          <caption>List of subscribed news</caption>
+          <thead>
+          <tr>
+            <th scope="col" hidden>#</th>
+            <th scope="col">E-mail Address</th>
+            <th scope="col">News Topic</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr th:each="subscription:${allSubscriptions}">
+            <th th:text="${subscription.getId()}" hidden></th>
+            <td th:text="${subscription.getEmailAddress()}"></td>
+            <td th:text="${subscription.getNewsTopic()}"></td>
+            <td>
+              <a th:href="@{/delete(id=${subscription.getId()})}" class="btn btn-danger">UNSUBSRIBE</a>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Link to JS file -->
+<script type="text/javascript" th:src="@{/js/app.js}"></script>
+</body>
+</html>
