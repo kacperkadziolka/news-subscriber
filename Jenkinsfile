@@ -29,13 +29,14 @@ pipeline {
             steps{
                 script {
                     docker.withRegistry("https://" + REPOSITORY_URI, "ecr:${AWS_DEFAULT_REGION}:" + registryCredential) {
-                    dockerImage.push()
+                        dockerImage.push()
+                    }
                 }
             }
         }
 
         stage('Deploy to ECS') {
-            steps{
+            steps {
                 withAWS(credentials: registryCredential, region: "${AWS_DEFAULT_REGION}") {
                     script {
 			            sh './script.sh'
