@@ -1,9 +1,9 @@
 {
-  "family": FAMILY,
+  "family": "ecrrepositorytest",
   "containerDefinitions": [
     {
       "image": "REPOSITORY_URI:BUILD_NUMBER",
-      "name": NAME,
+      "name": "ecrrepositorytest",
       "essential": true,
       "portMappings": [
         {
@@ -19,5 +19,5 @@
     "FARGATE"
   ],
   "networkMode": "awsvpc",
-  "executionRoleArn": ROLE_ARN
+  "executionRoleArn": "arn:aws:iam::047645927285:role/ecsTaskExecutionRole"
 }
