@@ -4,7 +4,7 @@ pipeline {
         AWS_ACCOUNT_ID="047645927285"
         AWS_DEFAULT_REGION="eu-central-1"
         IMAGE_REPO_NAME="ecrrepositorytest"
-        IMAGE_TAG="${env.BUILD_ID}"
+        IMAGE_TAG="latest"
         REPOSITORY_URI = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}"
         CLUSTER_NAME="defaultCluster"
 	    SERVICE_NAME="springboot-container-service"
@@ -14,6 +14,14 @@ pipeline {
     }
 
     stages {
+
+         stage('Logging into AWS ECR') {
+            steps {
+                script {
+                    sh "aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
+                }
+            }
+        }
 
         // Building Docker images
         stage('Building image') {
