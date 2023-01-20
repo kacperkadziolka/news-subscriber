@@ -1,9 +1,9 @@
 {
-  "family": "ecrrepositorytest",
+  "family": "defaultCluster",
   "containerDefinitions": [
     {
       "image": "REPOSITORY_URI:BUILD_NUMBER",
-      "name": "ecrrepositorytest",
+      "name": "first-run-task-definition",
       "essential": true,
       "portMappings": [
         {

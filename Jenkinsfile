@@ -36,11 +36,7 @@ pipeline {
 
         stage('Deploy to ECS') {
             steps {
-                withAWS(credentials: registryCredential, region: "${AWS_DEFAULT_REGION}") {
-                    script {
-			            sh './script.sh'
-                    }
-                }
+                sh 'aws ecs update-service --cluster defaultCluster --desired-count 1 --service springboot-container-service --task-definition first-run-task-definition --force-new-deployment'
             }
         }
     }
