@@ -17,8 +17,7 @@ public class NewsServiceImpl implements NewsService{
     @Autowired
     private RestTemplate restTemplate;
 
-    @Value("${external.api.key}")
-    private String apiKey;
+    private String apiKey = "&apiKey=9e602b3dd9f648f391fb68650c2544e3";
 
     private static final String baseUrlForTopHeadlines = "https://newsapi.org/v2/everything?q=";
 
