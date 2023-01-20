@@ -2,7 +2,7 @@
   "family": "defaultCluster",
   "containerDefinitions": [
     {
-      "image": "REPOSITORY_URI:BUILD_NUMBER",
+      "image": "REPOSITORY_URI:latest",
       "name": "first-run-task-definition",
       "essential": true,
       "portMappings": [
