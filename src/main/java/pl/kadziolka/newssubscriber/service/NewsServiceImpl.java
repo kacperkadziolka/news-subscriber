@@ -14,12 +14,17 @@ import java.util.ArrayList;
 @Service
 public class NewsServiceImpl implements NewsService{
 
-    @Autowired
     private RestTemplate restTemplate;
 
-    private String apiKey = "&apiKey=9e602b3dd9f648f391fb68650c2544e3";
+    @Value("${external.api.key}")
+    private String apiKey;
 
     private static final String baseUrlForTopHeadlines = "https://newsapi.org/v2/everything?q=";
+
+    @Autowired
+    public NewsServiceImpl(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
 
     @Override
     public ArrayList<Article> getArrayListOfArticles(String keyword) throws JsonProcessingException {
@@ -38,5 +43,4 @@ public class NewsServiceImpl implements NewsService{
         Article article = articleArrayList.get(index);
         return new Article(article.getTitle(), article.getDescription(), article.getUrl(), index);
     }
-
 }

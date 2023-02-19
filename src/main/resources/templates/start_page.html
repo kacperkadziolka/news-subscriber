@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+
+  <!-- Required meta tags -->
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>News Subscriber</title>
+
+  <!-- Link to CSS file -->
+  <link rel="stylesheet" th:href="@{/css/start_page_style.css}">
+
+</head>
+<body>
+
+  <h2>Login in into your account to start using News Subscriber</h2>
+  <div class="container" id="container">
+    <div class="form-container sign-up-container">
+      <form th:action="@{/register}" method="post">
+        <h1>Create Account</h1>
+        <span>and send your activation email</span>
+        <input type="email" name="username" placeholder="Email" />
+        <input type="password" name="password" placeholder="Password" />
+        <button>Sign Up</button>
+      </form>
+    </div>
+    <div class="form-container sign-in-container">
+      <div th:if="${param.error}">
+        <div class="alert alert-danger">Not activated Email or invalid Password</div>
+      </div>
+      <div th:if="${param.logout}">
+        <div class="alert alert-success">You have been logged out</div>
+      </div>
+      <form th:action="@{/login}" method="post">
+        <h1>Sign in</h1>
+        <input type="email" name="username" placeholder="Email" />
+        <input type="password" name="password" placeholder="Password" />
+        <button>Sign In</button>
+      </form>
+    </div>
+    <div class="overlay-container">
+      <div class="overlay">
+        <div class="overlay-panel overlay-left">
+          <h1>Thank you for registration!</h1>
+          <p>To keep connected with us please login with your personal info and do not forget to activate your email!</p>
+          <button class="ghost" id="signIn">Sign In</button>
+        </div>
+        <div class="overlay-panel overlay-right">
+          <h1>Hello, Friend!</h1>
+          <p>Enter your personal details and start using News Subscriber!</p>
+          <button class="ghost" id="signUp">Sign Up</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script th:src="@{/js/script.js}"></script>
+</body>
+</html>

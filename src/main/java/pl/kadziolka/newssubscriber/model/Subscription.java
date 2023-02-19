@@ -1,10 +1,17 @@
 package pl.kadziolka.newssubscriber.model;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 public class Subscription {
 
@@ -20,49 +27,6 @@ public class Subscription {
 
     private int period;
 
-    public Subscription() {
-    }
+    private String usernameOwner;
 
-    public Subscription(String emailAddress, String newsTopic, String timeUnit, int period) {
-        this.emailAddress = emailAddress;
-        this.newsTopic = newsTopic;
-        this.timeUnit = timeUnit;
-        this.period = period;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getEmailAddress() {
-        return emailAddress;
-    }
-
-    public void setEmailAddress(String emailAddress) {
-        this.emailAddress = emailAddress;
-    }
-
-    public String getNewsTopic() {
-        return newsTopic;
-    }
-
-    public void setNewsTopic(String newsTopic) {
-        this.newsTopic = newsTopic;
-    }
-
-    public String getTimeUnit() {
-        return timeUnit;
-    }
-
-    public void setTimeUnit(String timeUnit) {
-        this.timeUnit = timeUnit;
-    }
-
-    public int getPeriod() {
-        return period;
-    }
-
-    public void setPeriod(int period) {
-        this.period = period;
-    }
 }

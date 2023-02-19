@@ -4,12 +4,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.support.PeriodicTrigger;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import pl.kadziolka.newssubscriber.model.ApplicationUser;
 import pl.kadziolka.newssubscriber.model.Article;
 import pl.kadziolka.newssubscriber.model.Subscription;
 import pl.kadziolka.newssubscriber.service.EmailSenderService;
@@ -26,32 +28,38 @@ import java.util.concurrent.TimeUnit;
 @Controller
 public class EmailSenderController {
 
-    @Autowired
     private EmailSenderService emailSenderService;
 
-    @Autowired
     private NewsService newsService;
 
-    @Autowired
     private TaskScheduler taskScheduler;
 
-    @Autowired
     private SubscriptionService subscriptionService;
 
     private Map<Long, ScheduledFuture<?>> jobsMap = new HashMap<>();
 
     private ScheduledFuture<?> scheduledFuture;
 
-    @GetMapping
-    public String getAllSubscriptions(Model model) {
-        List<Subscription> allSubscriptions = subscriptionService.getSubscriptions();
+    @Autowired
+    public EmailSenderController(EmailSenderService emailSenderService, NewsService newsService, TaskScheduler taskScheduler, SubscriptionService subscriptionService) {
+        this.emailSenderService = emailSenderService;
+        this.newsService = newsService;
+        this.taskScheduler = taskScheduler;
+        this.subscriptionService = subscriptionService;
+    }
+
+    @GetMapping("/allSubscriptions")
+    public String getAllSubscriptions(Model model, @AuthenticationPrincipal ApplicationUser applicationUser) {
+        List<Subscription> allSubscriptions = subscriptionService.getSubscriptionsForOwner(applicationUser.getUsername());
         model.addAttribute("allSubscriptions", allSubscriptions);
+        System.out.println(applicationUser.getUsername());
         return "index";
     }
 
 
     @PostMapping("/sendEmail")
-    public String sendEmail(@ModelAttribute Subscription subscription) throws JsonProcessingException {
+    public String sendEmail(@ModelAttribute Subscription subscription, @AuthenticationPrincipal ApplicationUser applicationUser) throws JsonProcessingException {
+        subscription.setUsernameOwner(applicationUser.getUsername());
         subscriptionService.saveSubscription(subscription);
 
         TimeUnit timeUnit = null;
@@ -74,7 +82,7 @@ public class EmailSenderController {
                subscription.getEmailAddress(), articleArrayList), new PeriodicTrigger(subscription.getPeriod(), timeUnit));
         jobsMap.put(subscription.getId(), scheduledFuture);
 
-        return "redirect:/";
+        return "redirect:/allSubscriptions";
     }
 
     @GetMapping("/delete")
@@ -85,7 +93,6 @@ public class EmailSenderController {
             jobsMap.put(id, null);
         }
         subscriptionService.deleteSubscription(id);
-        return "redirect:/";
+        return "redirect:/allSubscriptions";
     }
-
 }

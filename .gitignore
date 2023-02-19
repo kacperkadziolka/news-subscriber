@@ -37,3 +37,4 @@ build/
 mvnw
 mvnw.cmd
 .mvn/
+/src/main/java/pl/kadziolka/newssubscriber/Start.java
