@@ -34,20 +34,33 @@ public class SpringSecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        /*
         http.csrf().disable()
                 .headers().disable()
                 .authorizeHttpRequests((authorize) -> authorize
-                        .antMatchers("/allSubscriptions").authenticated()
+                        .antMatchers("/getSubscriptions").authenticated())
+                .formLogin().defaultSuccessUrl("/getSubscriptions");
+
+         */
+
+
+        http.csrf().disable()
+                .headers().disable()
+                .authorizeHttpRequests((authorize) -> authorize
+                        .antMatchers("/getsubscriptions").authenticated()
+                        //.antMatchers("/subscribe").authenticated()
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
                         .loginProcessingUrl("/login")
-                        .defaultSuccessUrl("/allSubscriptions")
+                        .defaultSuccessUrl("/getsubscriptions")
                         .permitAll()
                 ).logout(logout -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                         .permitAll()
                 );
+
+
         return http.build();
      }
 

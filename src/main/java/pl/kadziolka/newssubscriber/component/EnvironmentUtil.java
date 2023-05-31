@@ -1,22 +1,20 @@
 package pl.kadziolka.newssubscriber.component;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+import javax.servlet.http.HttpServletRequest;
 
 @Component
 public class EnvironmentUtil {
-
-    private Environment environment;
 
     private String port;
 
     private String hostname;
 
-    @Autowired
+    /*
+    private Environment environment;
+
     public EnvironmentUtil(Environment environment) {
         this.environment = environment;
     }
@@ -34,4 +32,31 @@ public class EnvironmentUtil {
         }
         return hostname;
     }
+    */
+
+    private HttpServletRequest httpServletRequest;
+
+    private Environment environment;
+
+    public EnvironmentUtil(HttpServletRequest httpServletRequest, Environment environment) {
+        this.httpServletRequest = httpServletRequest;
+        this.environment = environment;
+    }
+
+    public String getHostname() {
+        if (hostname == null && httpServletRequest != null) {
+            String protocol = httpServletRequest.getHeader("X-Forwarded-Proto");
+            String host = httpServletRequest.getHeader("Host");
+            hostname = protocol + "://" + host;
+        }
+        return hostname;
+    }
+
+    public String getPort() {
+        if (port == null) {
+            port = environment.getProperty("local.server.port");
+        }
+        return port;
+    }
+
 }

@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -35,19 +34,35 @@ public class EmailSenderServiceImpl implements EmailSenderService {
 
     @Override
     @Async
-    public void sendEmail(String to, ArrayList<Article> articleArrayList) {
+    public void sendEmail(String to, ArrayList<Article> articleArrayList) throws MessagingException {
         Article article = newsService.getRandomArticleFromListOfArticles(articleArrayList);
 
-        String messageBody = "Description: " + article.getDescription() + "<br> Source URL: " + article.getUrl();
 
+        String messageBody = "This is an email send from News Subscriber newsletter. <br/>" +
+                "Short description of the news is: " + article.getDescription() + "<br/>" +
+                "<br/>" +
+                "Source URL: " + article.getUrl() +
+                "<br/> <br/>" +
+                "Thanks, <br/>" +
+                "Team News Subscriber";
+
+        String messageTitle = "Topic: " + article.getTitle();
+
+        /*
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
         simpleMailMessage.setFrom(sender);
         simpleMailMessage.setTo(to);
         simpleMailMessage.setSubject(article.getTitle());
         simpleMailMessage.setText(messageBody);
+        */
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
+        mimeMessageHelper.setTo(to);
+        mimeMessageHelper.setSubject(messageTitle);
+        mimeMessageHelper.setText(messageBody, true);
 
         try {
-            javaMailSender.send(simpleMailMessage);
+            javaMailSender.send(mimeMessage);
             logger.info("Mail sent successfully...");
         }
         catch (Exception e) {
@@ -62,7 +77,7 @@ public class EmailSenderServiceImpl implements EmailSenderService {
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
         mimeMessageHelper.setTo(to);
         mimeMessageHelper.setSubject(subject);
-        mimeMessageHelper.setText(text, isHTMLContent);
+        mimeMessageHelper.setText(text, true);
         javaMailSender.send(mimeMessage);
     }
 

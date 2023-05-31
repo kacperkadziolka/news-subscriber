@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public interface EmailSenderService {
 
-    void sendEmail(String to, ArrayList<Article> articleArrayList);
+    void sendEmail(String to, ArrayList<Article> articleArrayList) throws MessagingException;
 
     void sendRegistrationMail(String to, String subject, String text, boolean isHTMLContent) throws  MessagingException;
 }

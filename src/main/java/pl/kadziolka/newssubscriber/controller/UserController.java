@@ -32,13 +32,13 @@ public class UserController {
         this.applicationUserRepository = applicationUserRepository;
     }
 
-    @GetMapping("")
-    public String viewStartPage() {
+    @GetMapping({"","/login"})
+    public String loginPage() {
         return "start_page";
     }
     
     @PostMapping("/register")
-    public String register(ApplicationUser applicationUser, BindingResult result) throws UnknownHostException, MessagingException {
+    public String register(ApplicationUser applicationUser) throws UnknownHostException, MessagingException {
         // TODO: Handle the duplicate email in db
         userService.addUser(applicationUser);
         return "redirect:/";
@@ -52,7 +52,6 @@ public class UserController {
             applicationUser.setEnabled(true);
             return applicationUserRepository.save(applicationUser);
         }).orElseThrow(RuntimeException::new);
-
         return "start_page";
     }
 }

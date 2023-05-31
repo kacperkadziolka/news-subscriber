@@ -18,6 +18,7 @@ import pl.kadziolka.newssubscriber.service.EmailSenderService;
 import pl.kadziolka.newssubscriber.service.NewsService;
 import pl.kadziolka.newssubscriber.service.SubscriptionService;
 
+import javax.mail.MessagingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -48,7 +49,7 @@ public class EmailSenderController {
         this.subscriptionService = subscriptionService;
     }
 
-    @GetMapping("/allSubscriptions")
+    @GetMapping("/getsubscriptions")
     public String getAllSubscriptions(Model model, @AuthenticationPrincipal ApplicationUser applicationUser) {
         List<Subscription> allSubscriptions = subscriptionService.getSubscriptionsForOwner(applicationUser.getUsername());
         model.addAttribute("allSubscriptions", allSubscriptions);
@@ -78,11 +79,19 @@ public class EmailSenderController {
 
         ArrayList<Article> articleArrayList = newsService.getArrayListOfArticles(subscription.getNewsTopic());
 
-        scheduledFuture = taskScheduler.schedule(() -> emailSenderService.sendEmail(
-               subscription.getEmailAddress(), articleArrayList), new PeriodicTrigger(subscription.getPeriod(), timeUnit));
+        scheduledFuture = taskScheduler.schedule(() -> {
+            try {
+                emailSenderService.sendEmail(
+                       subscription.getEmailAddress(), articleArrayList);
+            } catch (MessagingException e) {
+                throw new RuntimeException(e);
+            }
+        }, new PeriodicTrigger(subscription.getPeriod(), timeUnit));
+
+
         jobsMap.put(subscription.getId(), scheduledFuture);
 
-        return "redirect:/allSubscriptions";
+        return "redirect:/getsubscriptions";
     }
 
     @GetMapping("/delete")
@@ -93,6 +102,6 @@ public class EmailSenderController {
             jobsMap.put(id, null);
         }
         subscriptionService.deleteSubscription(id);
-        return "redirect:/allSubscriptions";
+        return "redirect:/getsubscriptions";
     }
 }

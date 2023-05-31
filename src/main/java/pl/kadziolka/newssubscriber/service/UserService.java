@@ -51,7 +51,17 @@ public class UserService {
         token.setApplicationUser(applicationUser);
         tokenRepository.save(token);
 
-        String url = environmentUtil.getHostname() + ":" + environmentUtil.getPort() + "/token?tokenValue=" + tokenValue;
-        emailSenderService.sendRegistrationMail(applicationUser.getUsername(), "News Subscriber Registration Email", url, false);
+        String url = environmentUtil.getHostname() +
+                //":" + environmentUtil.getPort() +
+                "/token?tokenValue=" + tokenValue;
+        String messageContent =
+                "This is an email sent from News Subscriber to verify your email address. <br/>" +
+                "Please, activate your account by clicking on the link or copy it into your browser. <br/>" +
+                "<br/>" +
+                url +
+                "<br/> <br/>" +
+                "Thanks, <br/>" +
+                "Team News Subscriber";
+        emailSenderService.sendRegistrationMail(applicationUser.getUsername(), "News Subscriber Registration Email", messageContent, true);
     }
 }

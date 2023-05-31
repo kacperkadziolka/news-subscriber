@@ -12,9 +12,7 @@ pipeline {
 	    DESIRED_COUNT="1"
 	    registryCredential = "demo-admin-user"
     }
-
     stages {
-
          stage('Logging into AWS ECR') {
             steps {
                 script {
@@ -22,7 +20,6 @@ pipeline {
                 }
             }
         }
-
         // Building Docker images
         stage('Building image') {
             steps{
@@ -31,7 +28,6 @@ pipeline {
                 }
             }
         }
-
         // Uploading Docker images into AWS ECR
         stage('Pushing to ECR') {
             steps{
@@ -41,7 +37,6 @@ pipeline {
                 }
             }
         }
-
         stage('Deploy to ECS') {
             steps {
                 sh 'aws ecs update-service --cluster defaultCluster --desired-count 1 --service springboot-container-service --task-definition first-run-task-definition --force-new-deployment'

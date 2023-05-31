@@ -24,7 +24,16 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<ApplicationUser> applicationUser = applicationUserRepository.findByUsername(username);
 
+        if (applicationUser.isPresent()) {
+            return applicationUser.get();
+        }
+        else {
+            throw new UsernameNotFoundException("Invalid username or password");
+        }
+
+        /*
         return applicationUser.map(element -> applicationUserRepository.findByUsername(element.getUsername()).get())
                 .orElseThrow(() -> new UsernameNotFoundException("Invalid username or password"));
+         */
     }
 }
