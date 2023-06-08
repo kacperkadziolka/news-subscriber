@@ -44,11 +44,7 @@ public class EnvironmentUtil {
     }
 
     public String getHostname() {
-        if (hostname == null && httpServletRequest != null) {
-            String protocol = httpServletRequest.getHeader("X-Forwarded-Proto");
-            String host = httpServletRequest.getHeader("Host");
-            hostname = protocol + "://" + host;
-        }
+        if (hostname == null && httpServletRequest != null) hostname = httpServletRequest.getHeader("Host");
         return hostname;
     }
 

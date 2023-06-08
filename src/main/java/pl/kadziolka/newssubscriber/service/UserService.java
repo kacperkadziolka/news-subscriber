@@ -58,7 +58,7 @@ public class UserService {
                 "This is an email sent from News Subscriber to verify your email address. <br/>" +
                 "Please, activate your account by clicking on the link or copy it into your browser. <br/>" +
                 "<br/>" +
-                url +
+                "http://" + url +
                 "<br/> <br/>" +
                 "Thanks, <br/>" +
                 "Team News Subscriber";

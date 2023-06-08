@@ -8,6 +8,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 import pl.kadziolka.newssubscriber.model.Article;
 
 import javax.mail.MessagingException;
@@ -37,7 +38,6 @@ public class EmailSenderServiceImpl implements EmailSenderService {
     public void sendEmail(String to, ArrayList<Article> articleArrayList) throws MessagingException {
         Article article = newsService.getRandomArticleFromListOfArticles(articleArrayList);
 
-
         String messageBody = "This is an email send from News Subscriber newsletter. <br/>" +
                 "Short description of the news is: " + article.getDescription() + "<br/>" +
                 "<br/>" +
@@ -48,13 +48,6 @@ public class EmailSenderServiceImpl implements EmailSenderService {
 
         String messageTitle = "Topic: " + article.getTitle();
 
-        /*
-        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-        simpleMailMessage.setFrom(sender);
-        simpleMailMessage.setTo(to);
-        simpleMailMessage.setSubject(article.getTitle());
-        simpleMailMessage.setText(messageBody);
-        */
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
         mimeMessageHelper.setTo(to);

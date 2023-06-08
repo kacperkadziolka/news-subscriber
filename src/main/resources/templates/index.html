@@ -84,7 +84,7 @@
         <form th:action="@{/sendEmail}" method="post" id="subscribe-form">
           <div class="mb-3">
             <label for="emailAddressSubmitForm" class="form-label">E-mail address:</label>
-            <input type="email" class="form-control" name="emailAddress" id="emailAddressSubmitForm" placeholder="Enter your email-address" required>
+            <input type="email" th:value="${#authentication.getPrincipal().getUsername()}" class="form-control" name="emailAddress" id="emailAddressSubmitForm" disabled readonly>
           </div>
           <div class="mb-3">
             <label for="newsTopicSubmitForm" class="form-label">News topic:</label>

@@ -61,6 +61,7 @@ public class EmailSenderController {
     @PostMapping("/sendEmail")
     public String sendEmail(@ModelAttribute Subscription subscription, @AuthenticationPrincipal ApplicationUser applicationUser) throws JsonProcessingException {
         subscription.setUsernameOwner(applicationUser.getUsername());
+        subscription.setEmailAddress(applicationUser.getUsername());
         subscriptionService.saveSubscription(subscription);
 
         TimeUnit timeUnit = null;
