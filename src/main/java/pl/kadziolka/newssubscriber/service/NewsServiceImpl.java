@@ -28,7 +28,7 @@ public class NewsServiceImpl implements NewsService{
 
     @Override
     public ArrayList<Article> getArrayListOfArticles(String keyword) throws JsonProcessingException {
-        String keywordResponse = restTemplate.getForObject(baseUrlForTopHeadlines + keyword + "&language=en" + apiKey, String.class);
+        String keywordResponse = restTemplate.getForObject(baseUrlForTopHeadlines + keyword + apiKey, String.class);
 
         ObjectMapper objectMapper = new ObjectMapper();
         Example example = objectMapper.readValue(keywordResponse, Example.class);
