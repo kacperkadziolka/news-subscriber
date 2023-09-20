@@ -52,6 +52,7 @@ public class UserController {
             applicationUser.setEnabled(true);
             return applicationUserRepository.save(applicationUser);
         }).orElseThrow(RuntimeException::new);
+        // ttt ryrr
         return "start_page";
     }
 }
